@@ -1,0 +1,27 @@
+# app_template_csclient - app framework using csclient.py
+from csclient import EventingCSClient
+import time
+
+cp = EventingCSClient('port_flap')
+cp.log('Starting...')
+
+number = 1
+increase = 1
+
+
+while number < 50000:
+    status = cp.get('config/ethernet/0/enabled')
+    time.sleep(300)
+    if status is False:
+        cp.put('config/ethernet/0/enabled', True)
+        cp.log('Enabled Port 0')
+        status = cp.get('config/ethernet/0/enabled')
+        number += 1
+    else:
+        cp.put('config/ethernet/0/enabled', False)
+        cp.log('Disabled Port 0')
+        status = cp.get('config/ethernet/0/enabled')
+        number += 1
+else:
+    pass
+
